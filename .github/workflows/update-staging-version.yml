@@ -14,6 +14,8 @@ jobs:
     steps:
       - name: Checkout tag
         uses: actions/checkout@v2
+        with:
+          fetch-depth: 2
 
       # - name: Create branch from tag
       #   run: |
@@ -35,7 +37,7 @@ jobs:
           # This verifies that there is only one file changed between dev and this branch,
           # that the file is our version file, and that only one line has changed.
           # If these criteria are not met, the action fails here and no pr is made.
-          [ '1 1 .github/staging-version' = "`git diff --numstat --no-color dev HEAD | xargs`" ]
+          [ '1 1 .github/staging-version' = "`git diff --numstat --no-color dev HEAD -- | xargs`" ]
       - name: Push and create pull request
         uses: peter-evans/create-pull-request@v2
         if: ${{ success() }}

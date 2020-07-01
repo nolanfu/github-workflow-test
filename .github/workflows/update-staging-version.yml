@@ -6,8 +6,8 @@ on:
 
 name: Update version file and create PR
 env:
-  BRANCH: ${{ GITHUB_REF:10 }}-staging-version-update
-  TEMP_BRANCH: ${{ GITHUB_REF:10 }}-staging-version-update-temp
+  BRANCH: ${{ GITHUB_SHA }}-staging-version-update
+  TEMP_BRANCH: ${{ GITHUB_SHA }}-staging-version-update-temp
   BASE_BRANCH: dev
 
 jobs:
@@ -38,7 +38,7 @@ jobs:
 
       - name: Update version file
         run: |
-          ./.github/scripts/update-version-file.sh ${{ GITHUB_REF:10 }}
+          ./.github/scripts/update-version-file.sh ${{ GITHUB_REF }}
 
       - name: Commit version file
         run: |

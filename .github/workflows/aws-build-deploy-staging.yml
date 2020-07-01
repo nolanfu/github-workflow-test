@@ -35,7 +35,7 @@ jobs:
           # that the file is our version file, and that only one line has changed.
           # If these criteria are not met, the action fails here and no pr is made.
           git fetch origin ${{ github.base_ref }}:${{ github.base_ref }}
-          git diff --numstat --no-color ${{ github.base_sha }}~1 ${{ github.base_sha }} -- | xargs
+          git diff --numstat --no-color ${{ GITHUB_SHA }}~1 ${{ GITHUB_SHA }} -- | xargs
           [ '1 1 .github/staging-version' = "`git diff --numstat --no-color ${{ github.base_ref }} HEAD -- | xargs`" ]
 
       - name: Success step

@@ -9,6 +9,7 @@ name: Update version file and create PR
 jobs:
   tag-branch:
     name: Make a temporary tag branch
+    runs-on: ubuntu-latest
     steps:
       - name: Checkout tag
         uses: actions/checkout@v2

@@ -24,19 +24,19 @@ jobs:
         with:
           ref: ${{ github.head_ref }}
 
+      - name: Fail if not merged
+        if: ${{ !github.event.pull_request.merged }}
+        run: |
+          exit 1
+
       - name: Fail if not synced with base branch
         run: |
           # This verifies that there is only one file changed between base and this branch,
           # that the file is our version file, and that only one line has changed.
           # If these criteria are not met, the action fails here and no pr is made.
           git fetch origin ${{ github.base_ref }}:${{ github.base_ref }}
-          git diff --numstat --no-color ${{ github.base_ref }} HEAD -- | xargs
+          git diff --numstat --no-color ${{ github.base_sha }}~1 ${{ github.base_sha }} -- | xargs
           [ '1 1 .github/staging-version' = "`git diff --numstat --no-color ${{ github.base_ref }} HEAD -- | xargs`" ]
-
-      - name: Fail if not merged
-        if: ${{ !github.event.pull_request.merged }}
-        run: |
-          exit 1
 
       - name: Success step
         if: ${{ success() }}

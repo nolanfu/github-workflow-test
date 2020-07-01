@@ -7,10 +7,8 @@ on:
 name: Update version file and create PR
 
 jobs:
-  version-pr:
-    name: Make version update PR
-    runs-on: ubuntu-latest
-
+  tag-branch:
+    name: Make a temporary tag branch
     steps:
       - name: Checkout tag
         uses: actions/checkout@v2
@@ -21,6 +19,16 @@ jobs:
           git config --global user.email '${{ github.actor }}@users.noreply.github.com'
           git checkout -b ${{ github.ref }}-staging-version-update-temp 
           git push --set-upstream origin ${{ github.ref }}-staging-version-update-temp
+
+  version-pr:
+    name: Make version update PR
+    runs-on: ubuntu-latest
+    needs: [tag-branch]
+
+    steps:
+      - name: Checkout tag
+        uses: actions/checkout@v2
+        ref: ${{ github.ref }}-staging-version-update-temp
 
       - name: Update version file
         run: |

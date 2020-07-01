@@ -7,7 +7,9 @@ on:
 name: Update version file and create PR
 env:
   BRANCH: ${{ github.event.after }}-staging-version-update
-  TEMP_BRANCH: ${{ github.event.after }}-staging-version-update-temp
+  # TEMP_BRANCH can't start with the same string as BRANCH, or the create-pull-request 
+  # action will get confused and complain.
+  TEMP_BRANCH: ${{ github.event.after }}-temp-staging-version-update
   BASE_BRANCH: dev
 
 jobs:
@@ -48,7 +50,6 @@ jobs:
         if: ${{ success() }}
         with:
           branch: ${{ env.BRANCH }}
-          branch-suffix: short-commit-hash
           base: ${{ env.BASE_BRANCH }}
           title: 'Release ${{ github.ref }} to staging' 
           committer: GitHub <noreply@github.com>

@@ -11,30 +11,19 @@ env:
   BASE_BRANCH: dev
 
 jobs:
-  tag-branch:
-    name: Make a temporary tag branch
+  version-pr:
+    name: Make version update PR
     runs-on: ubuntu-latest
+
     steps:
       - name: Checkout tag
         uses: actions/checkout@v2
-
       - name: Create branch from tag
         run: |
           git config --global user.name '${{ github.actor }}'
           git config --global user.email '${{ github.actor }}@users.noreply.github.com'
           git checkout -b ${{ env.TEMP_BRANCH }}
           git push --set-upstream origin ${{ env.TEMP_BRANCH }}
-
-  version-pr:
-    name: Make version update PR
-    runs-on: ubuntu-latest
-    needs: [tag-branch]
-
-    steps:
-      - name: Checkout tag
-        uses: actions/checkout@v2
-        with:
-          ref: ${{ env.TEMP_BRANCH }}
 
       - name: Update version file
         run: |

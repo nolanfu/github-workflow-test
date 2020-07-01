@@ -5,6 +5,10 @@ on:
       - v*
 
 name: Update version file and create PR
+env:
+  BRANCH: ${{ github.ref:10 }}-staging-version-update
+  TEMP_BRANCH: ${{ github.ref:10 }}-staging-version-update-temp
+  BASE_BRANCH: dev
 
 jobs:
   tag-branch:
@@ -18,8 +22,8 @@ jobs:
         run: |
           git config --global user.name '${{ github.actor }}'
           git config --global user.email '${{ github.actor }}@users.noreply.github.com'
-          git checkout -b ${{ github.ref }}-staging-version-update-temp 
-          git push --set-upstream origin ${{ github.ref }}-staging-version-update-temp
+          git checkout -b ${{ TEMP_BRANCH }}
+          git push --set-upstream origin ${{ TEMP_BRANCH }}
 
   version-pr:
     name: Make version update PR
@@ -30,11 +34,11 @@ jobs:
       - name: Checkout tag
         uses: actions/checkout@v2
         with:
-          ref: ${{ github.ref }}-staging-version-update-temp
+          ref: ${{ TEMP_BRANCH }}
 
       - name: Update version file
         run: |
-          ./.github/scripts/update-version-file.sh ${{ github.ref }}
+          ./.github/scripts/update-version-file.sh ${{ github.ref:10 }}
 
       - name: Commit version file
         run: |
@@ -43,20 +47,20 @@ jobs:
           git config --global user.email '${{ github.actor }}@users.noreply.github.com'
           git commit -m "Automatically updated version file to ${{ github.ref }} on tag push."
 
-      - name: Fail if not synced with dev branch
+      - name: Fail if not synced with base branch
         run: |
-          # This verifies that there is only one file changed between dev and this branch,
+          # This verifies that there is only one file changed between base and this branch,
           # that the file is our version file, and that only one line has changed.
           # If these criteria are not met, the action fails here and no pr is made.
-          git fetch origin dev:dev
-          [ '1 1 .github/staging-version' = "`git diff --numstat --no-color dev HEAD -- | xargs`" ]
+          git fetch origin ${{ BASE_BRANCH }}:${{ BASE_BRANCH }}
+          [ '1 1 .github/staging-version' = "`git diff --numstat --no-color ${{ BASE_BRANCH }} HEAD -- | xargs`" ]
       - name: Push and create pull request
         uses: peter-evans/create-pull-request@v2
         if: ${{ success() }}
         with:
-          branch: ${{ github.ref }}-staging-version-update
+          branch: ${{ BRANCH }}
           branch-suffix: short-commit-hash
-          base: dev
+          base: ${{ BASE_BRANCH }}
           title: 'Release ${{ github.ref }} to staging' 
           committer: GitHub <noreply@github.com>
           author: ${{ github.actor }} <${{ github.actor }}@users.noreply.github.com>

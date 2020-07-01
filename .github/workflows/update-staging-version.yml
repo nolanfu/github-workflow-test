@@ -29,7 +29,8 @@ jobs:
     steps:
       - name: Checkout tag
         uses: actions/checkout@v2
-        ref: ${{ github.ref }}-staging-version-update-temp
+        with:
+          ref: ${{ github.ref }}-staging-version-update-temp
 
       - name: Update version file
         run: |

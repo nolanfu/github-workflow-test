@@ -12,10 +12,13 @@ jobs:
     runs-on: ubuntu-latest
 
     steps:
-      - name: Checkout tag
+      - name: Checkout dev 
         uses: actions/checkout@v2
         with:
-          fetch-depth: 2
+          ref: dev
+
+      - name: Checkout tag
+        uses: actions/checkout@v2
 
       # - name: Create branch from tag
       #   run: |

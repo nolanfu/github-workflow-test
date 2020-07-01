@@ -6,8 +6,8 @@ on:
 
 name: Update version file and create PR
 env:
-  BRANCH: ${{ github.ref:10 }}-staging-version-update
-  TEMP_BRANCH: ${{ github.ref:10 }}-staging-version-update-temp
+  BRANCH: ${{ GITHUB_REF:10 }}-staging-version-update
+  TEMP_BRANCH: ${{ GITHUB_REF:10 }}-staging-version-update-temp
   BASE_BRANCH: dev
 
 jobs:
@@ -38,14 +38,14 @@ jobs:
 
       - name: Update version file
         run: |
-          ./.github/scripts/update-version-file.sh ${{ github.ref:10 }}
+          ./.github/scripts/update-version-file.sh ${{ GITHUB_REF:10 }}
 
       - name: Commit version file
         run: |
           git add .github/staging-version
           git config --global user.name '${{ github.actor }}'
           git config --global user.email '${{ github.actor }}@users.noreply.github.com'
-          git commit -m "Automatically updated version file to ${{ github.ref }} on tag push."
+          git commit -m "Automatically updated version file to ${{ GITHUB_REF }} on tag push."
 
       - name: Fail if not synced with base branch
         run: |
@@ -61,10 +61,10 @@ jobs:
           branch: ${{ BRANCH }}
           branch-suffix: short-commit-hash
           base: ${{ BASE_BRANCH }}
-          title: 'Release ${{ github.ref }} to staging' 
+          title: 'Release ${{ GITHUB_REF }} to staging' 
           committer: GitHub <noreply@github.com>
           author: ${{ github.actor }} <${{ github.actor }}@users.noreply.github.com>
       - name: Delete temporary tag branch
         if: ${{ always() }}
         run: |
-          git push --delete origin ${{ github.ref }}-staging-version-update-temp
+          git push --delete origin ${{ TEMP_BRANCH }}

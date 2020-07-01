@@ -23,6 +23,7 @@ jobs:
         uses: actions/checkout@v2
         with:
           ref: dev
+          fetch-depth: 2
 
       - name: Fail if not merged
         if: ${{ !github.event.pull_request.merged }}
@@ -34,7 +35,6 @@ jobs:
           # This verifies that there is only one file changed in the merge commit,
           # that the file is our version file, and that only one line has changed.
           # If these criteria are not met, the action fails here and no pr is made.
-          git fetch origin
           git diff --numstat --no-color HEAD^ -- | xargs
           # [ '1 1 .github/staging-version' = "`git diff --numstat --no-color ${{ github.event.pull_request.merge_commit_sha }}~1 ${{ github.event.pull_request.merge_commit_sha }} -- | xargs`" ]
           [ '1 1 .github/staging-version' = "`git diff --numstat --no-color HEAD^ -- | xargs`" ]

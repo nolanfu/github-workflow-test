@@ -48,6 +48,7 @@ jobs:
           title: 'Release ${{ github.ref }} to staging' 
           committer: GitHub <noreply@github.com>
           author: ${{ github.actor }} <${{ github.actor }}@users.noreply.github.com>
-      - name: Delete tempoorary tag branch
+      - name: Delete temporary tag branch
+        if: ${{ always() }}
         run: |
           git push --delete origin ${{ github.ref }}-staging-version-update-temp

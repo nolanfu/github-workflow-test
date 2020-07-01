@@ -35,8 +35,9 @@ jobs:
           # that the file is our version file, and that only one line has changed.
           # If these criteria are not met, the action fails here and no pr is made.
           git fetch origin
-          git diff --numstat --no-color ${{ github.event.pull_request.merge_commit_sha }}~1 ${{ github.event.pull_request.merge_commit_sha }} -- | xargs
-          [ '1 1 .github/staging-version' = "`git diff --numstat --no-color ${{ github.event.pull_request.merge_commit_sha }}~1 ${{ github.event.pull_request.merge_commit_sha }} -- | xargs`" ]
+          git diff --numstat --no-color HEAD@{1} HEAD -- | xargs
+          # [ '1 1 .github/staging-version' = "`git diff --numstat --no-color ${{ github.event.pull_request.merge_commit_sha }}~1 ${{ github.event.pull_request.merge_commit_sha }} -- | xargs`" ]
+          [ '1 1 .github/staging-version' = "`git diff --numstat --no-color HEAD@{1} HEAD -- | xargs`" ]
 
       - name: Success step
         if: ${{ success() }}

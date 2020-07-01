@@ -22,7 +22,7 @@ jobs:
       - name: Checkout
         uses: actions/checkout@v2
         with:
-          ref: dev
+          ref: ${{ github.event.pull_request.merge_commit_sha }}
           fetch-depth: 2
 
       - name: Fail if not merged

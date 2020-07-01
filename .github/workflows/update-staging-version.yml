@@ -39,6 +39,8 @@ jobs:
       - name: Commit version file
         run: |
           git add .github/staging-version
+          git config --global user.name '${{ github.actor }}'
+          git config --global user.email '${{ github.actor }}@users.noreply.github.com'
           git commit -m "Automatically updated version file to ${{ github.ref }} on tag push."
 
       - name: Fail if not synced with dev branch

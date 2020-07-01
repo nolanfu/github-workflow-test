@@ -21,8 +21,6 @@ jobs:
     steps:
       - name: Checkout
         uses: actions/checkout@v2
-        with:
-          ref: ${{ github.event.pull_request.merge_commit_sha }}
 
       - name: Fail if not merged
         if: ${{ !github.event.pull_request.merged }}
@@ -34,9 +32,8 @@ jobs:
           # This verifies that there is only one file changed in the merge commit,
           # that the file is our version file, and that only one line has changed.
           # If these criteria are not met, the action fails here and no pr is made.
-          # git diff --numstat --no-color ${{ github.event.pull_request.merge_commit_sha }}~1 ${{ github.event.pull_request.merge_commit_sha }} -- | xargs
-          git diff --numstat --no-color HEAD~1 HEAD -- | xargs
-          [ '1 1 .github/staging-version' = "`git diff --numstat --no-color HEAD~1 HEAD -- | xargs`" ]
+          git diff --numstat --no-color ${{ github.event.pull_request.merge_commit_sha }}~1 ${{ github.event.pull_request.merge_commit_sha }} -- | xargs
+          [ '1 1 .github/staging-version' = "`git diff --numstat --no-color ${{ github.event.pull_request.merge_commit_sha }}~1 ${{ github.event.pull_request.merge_commit_sha }} -- | xargs`" ]
 
       - name: Success step
         if: ${{ success() }}

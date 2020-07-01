@@ -19,8 +19,8 @@ jobs:
         run: |
           git config --global user.name '${{ github.actor }}'
           git config --global user.email '${{ github.actor }}@users.noreply.github.com'
-          git checkout -b ${{ github.ref }}-staging-version-update 
-          git push --set-upstream origin ${{ github.ref }}-staging-version-update
+          git checkout -b ${{ github.ref }}-staging-version-update-temp 
+          git push --set-upstream origin ${{ github.ref }}-staging-version-update-temp
 
       - name: Update version file
         run: |
@@ -50,4 +50,4 @@ jobs:
           author: ${{ github.actor }} <${{ github.actor }}@users.noreply.github.com>
       - name: Delete tempoorary tag branch
         run: |
-          git push --delete origin ${{ github.ref }}-staging-version-update
+          git push --delete origin ${{ github.ref }}-staging-version-update-temp

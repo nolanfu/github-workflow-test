@@ -22,7 +22,7 @@ jobs:
       - name: Checkout
         uses: actions/checkout@v2
         with:
-          ref: ${{ github.head_ref }}
+          ref: ${{ github.base_ref }}
 
       - name: Fail if not merged
         if: ${{ !github.event.pull_request.merged }}
@@ -31,10 +31,9 @@ jobs:
 
       - name: Fail if not synced with base branch
         run: |
-          # This verifies that there is only one file changed between base and this branch,
+          # This verifies that there is only one file changed in the merge commit,
           # that the file is our version file, and that only one line has changed.
           # If these criteria are not met, the action fails here and no pr is made.
-          git fetch origin ${{ github.base_ref }}:${{ github.base_ref }}
           git diff --numstat --no-color ${{ github.event.pull_request.merge_commit_sha }}~1 ${{ github.event.pull_request.merge_commit_sha }} -- | xargs
           [ '1 1 .github/staging-version' = "`git diff --numstat --no-color ${{ github.event.pull_request.merge_commit_sha }}~1 ${{ github.event.pull_request.merge_commit_sha }} -- | xargs`" ]
 

@@ -15,9 +15,9 @@ jobs:
       - name: Checkout tag
         uses: actions/checkout@v2
 
-      # - name: Create branch from tag
-      #   run: |
-      #     git checkout -b ${{ github.ref }}-staging-version-update 
+      - name: Create branch from tag
+        run: |
+          git checkout -b ${{ github.ref }}-staging-version-update 
 
       - name: Update version file
         run: |
